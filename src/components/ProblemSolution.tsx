@@ -189,7 +189,7 @@ export function ProblemSolution() {
               }}
             >
               <img
-                src="/Designer_(58).png"
+                src="/Designer58.png"
                 alt="VS"
                 className="w-full h-full object-contain drop-shadow-2xl"
               />

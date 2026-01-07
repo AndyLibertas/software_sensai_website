@@ -42,7 +42,7 @@ export function Hero({ onOpenModal }: HeroProps) {
       ease: 'easeOut'
     }} className="relative z-10 flex flex-col items-center text-center max-w-5xl mx-auto mb-16">
         {/* Logo - Even Bigger */}
-        <motion.img src="/Designer_(56).png" alt="SoftwareSensAI Icon" className="h-48 md:h-64 mb-10 object-contain drop-shadow-2xl" initial={{
+        <motion.img src="/Designer56.png" alt="SoftwareSensAI Icon" className="h-48 md:h-64 mb-10 object-contain drop-shadow-2xl" initial={{
         scale: 0.9,
         opacity: 0
       }} animate={{

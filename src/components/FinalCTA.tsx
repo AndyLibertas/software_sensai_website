@@ -27,7 +27,7 @@ export function FinalCTA({ onOpenModal }: FinalCTAProps) {
         once: true
       }}>
           {/* New Full Logo */}
-          <img src="/Designer_(55).png" alt="SoftwareSensAI Logo" className="w-64 md:w-80 mx-auto mb-12 object-contain drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]" />
+          <img src="/Designer55.png" alt="SoftwareSensAI Logo" className="w-64 md:w-80 mx-auto mb-12 object-contain drop-shadow-[0_0_15px_rgba(6,182,212,0.3)]" />
 
           <h2 className="text-5xl md:text-6xl font-bold text-white mb-8 tracking-tight drop-shadow-lg">
             The dojo is open.

@@ -45,7 +45,7 @@ export function LandingPage() {
       <footer className="bg-black py-12 border-t border-white/10">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
-            <img src="/Designer_(56).png" alt="Logo Icon" className="w-8 h-8" />
+            <img src="/Designer56.png" alt="Logo Icon" className="w-8 h-8" />
             <span className="font-bold text-lg text-white">
               SoftwareSens<span className="text-cyan-500">AI</span>
             </span>
