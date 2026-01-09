@@ -17,7 +17,7 @@ export function LandingPage() {
       <section className="py-12 bg-zinc-950 border-y border-white/5">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <p className="text-sm font-medium text-gray-500 mb-8 tracking-[0.2em] uppercase">
-            Trusted by forward-thinking SMBs
+            Trusted by forward-thinking companies
           </p>
           <div className="flex flex-wrap justify-center items-center gap-x-12 gap-y-8">
             <a href="https://www.libertascolorado.com" target="_blank" rel="noopener noreferrer" className="text-xl md:text-2xl font-bold text-gray-500 hover:text-white transition-colors duration-300">

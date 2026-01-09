@@ -62,7 +62,7 @@ export function Hero({ onOpenModal }: HeroProps) {
 
         {/* Sub-headline */}
         <p className="text-xl md:text-2xl text-gray-400 mb-10 max-w-2xl leading-relaxed drop-shadow-md">
-          Modular, AI-powered operations for SMBs. Unify accounting, CRM, and
+          Modular, AI-powered operations for growing businesses. Unify accounting, CRM, and
           IT. Build modules that fit your workflow.
         </p>
 

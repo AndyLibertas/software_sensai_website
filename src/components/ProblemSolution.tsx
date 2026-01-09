@@ -156,7 +156,7 @@ export function ProblemSolution() {
             </p>
 
             <p className="text-lg text-gray-400 mb-6 leading-relaxed relative z-10">
-              The world of SMBs is full of noise. Separate accounting, CRM, and
+              The world of modern business is full of noise. Separate accounting, CRM, and
               IT systems pulling you in different directions. Data silos, manual
               reconciliations, and wasted time breed frustration.
             </p>
