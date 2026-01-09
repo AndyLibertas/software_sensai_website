@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
 interface ThreeDojoBackgroundProps {
   isHovering: boolean;
 }
@@ -28,7 +29,27 @@ export function ThreeDojoBackground({
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     containerRef.current.appendChild(renderer.domElement);
-    // --- NINJA STAR TEXTURE ---
+
+    // --- ADD LIGHTING FOR 3D EFFECT ---
+    // Lower ambient for more contrast
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.3); // Was 0.6
+    scene.add(ambientLight);
+
+    // stronger key light
+    const dirLight = new THREE.DirectionalLight(0xffffff, 3); // Was 2
+    dirLight.position.set(5, 5, 10);
+    scene.add(dirLight);
+    
+    // Add a rim light for edge definition
+    const rimLight = new THREE.DirectionalLight(0x00ffff, 2);
+    rimLight.position.set(-5, 5, -5); // Back light
+    scene.add(rimLight);
+    
+    const pointLight = new THREE.PointLight(0x00bcd4, 1, 20);
+    pointLight.position.set(0, 0, 5);
+    scene.add(pointLight);
+
+    // --- NINJA STAR GEOMETRY FROM SVG ---
     const svgString = `
     <svg height="256" width="256" version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 38.084 38.084">
       <path fill="#00bcd4" d="M24.379,33.023l13.705,5.06l-5.06-13.706c-0.076,0.093-0.158,0.184-0.244,0.271
@@ -45,47 +66,76 @@ export function ThreeDojoBackground({
         c1.383,1.383,1.383,3.623,0,5.006C24.564,32.867,24.472,32.948,24.379,33.023z M19.042,21.655c-1.442,0-2.611-1.17-2.611-2.611
         c0-1.442,1.169-2.611,2.611-2.611c1.441,0,2.611,1.169,2.611,2.611C21.653,20.485,20.484,21.655,19.042,21.655z"/>
     </svg>`;
-    const blob = new Blob([svgString], {
-      type: 'image/svg+xml'
+
+    const loader = new SVGLoader();
+    const svgData = loader.parse(svgString);
+    const shapes: THREE.Shape[] = [];
+
+    svgData.paths.forEach((path) => {
+      const pathShapes = path.toShapes(true);
+      shapes.push(...pathShapes);
     });
-    const url = URL.createObjectURL(blob);
-    const texture = new THREE.TextureLoader().load(url);
-    // --- CREATE SINGLE MESHES ---
-    const geometry = new THREE.PlaneGeometry(3, 3);
-    const material = new THREE.MeshBasicMaterial({
-      map: texture,
-      transparent: true,
-      side: THREE.DoubleSide,
-      opacity: 0.9,
-      depthTest: false
+
+    const extrudeSettings = {
+      depth: 5, // Thicker
+      bevelEnabled: true,
+      bevelThickness: 1, // Rounder edges
+      bevelSize: 0.5,
+      bevelSegments: 5 // Smoother
+    };
+
+    const geometry = new THREE.ExtrudeGeometry(shapes, extrudeSettings);
+    geometry.center();
+    geometry.scale(0.08, 0.08, 0.08);
+    // Flip Y to match original SVG orientation
+    geometry.scale(1, -1, 1);
+
+    const material = new THREE.MeshStandardMaterial({
+      color: 0x00bcd4,
+      metalness: 0.9,
+      roughness: 0.1,
+      emissive: 0x00bcd4,
+      emissiveIntensity: 0.1,
+      side: THREE.DoubleSide
     });
+
     const star1 = new THREE.Mesh(geometry, material);
     const star2 = new THREE.Mesh(geometry, material);
+
     // Initial Positions (Far back, Wide apart)
     const startZ = -50;
     const startX = 35; // Wide start
     star1.position.set(-startX, 0, startZ); // Left
     star2.position.set(startX, 0, startZ); // Right
+
+    // Add random slight rotation
+    star1.rotation.x = Math.PI / 6;
+    star2.rotation.x = -Math.PI / 6;
+
     scene.add(star1);
     scene.add(star2);
+
     // Animation State
-    const speed = 0.3; // SLOWER SPEED (Was 0.8)
-    const rotationSpeed = 0.1; // Slower rotation too
+    const speed = 0.6; 
+    const rotationSpeed = 0.18;
+
     const animate = () => {
       requestAnimationFrame(animate);
       if (isHoveringRef.current) {
         if (!hasPlayedRef.current) {
           // --- ANIMATE STARS ---
-          // Move forward
           star1.position.z += speed;
           star2.position.z += speed;
-          // Curve in towards center (lerp X towards 0)
-          star1.position.x *= 0.98; // Slower curve decay to match slower speed
+
+          star1.position.x *= 0.98;
           star2.position.x *= 0.98;
-          // Rotate
+
           star1.rotation.z += rotationSpeed;
           star2.rotation.z -= rotationSpeed;
-          // Check if passed camera
+          
+          star1.rotation.x += 0.01;
+          star2.rotation.y += 0.01;
+
           if (star1.position.z > 10 && star2.position.z > 10) {
             hasPlayedRef.current = true;
             star1.visible = false;
@@ -100,8 +150,10 @@ export function ThreeDojoBackground({
         hasPlayedRef.current = false;
         star1.position.set(-startX, 0, startZ);
         star2.position.set(startX, 0, startZ);
-        star1.rotation.set(0, 0, 0);
-        star2.rotation.set(0, 0, 0);
+        
+        star1.rotation.set(Math.PI / 6, 0, 0);
+        star2.rotation.set(-Math.PI / 6, 0, 0);
+        
         star1.visible = true;
         star2.visible = true;
       }
@@ -123,7 +175,6 @@ export function ThreeDojoBackground({
       geometry.dispose();
       material.dispose();
       renderer.dispose();
-      URL.revokeObjectURL(url);
     };
   }, []);
   return <div ref={containerRef} className="absolute inset-0 z-0 pointer-events-none opacity-60" style={{
